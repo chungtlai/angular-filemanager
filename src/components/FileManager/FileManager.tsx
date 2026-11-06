@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import {
   ChmodState,
   FileItem,
@@ -791,6 +792,27 @@ export const FileManager: React.FC<FileManagerProps> = ({ config: userConfig }) 
         }
         t={t}
       />
+
+      {inProcess && !activeModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-[1px] select-none"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className="flex flex-col items-center gap-3 rounded-lg border bg-background px-8 py-6 shadow-lg">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="text-sm font-medium text-foreground">
+              {selectedItems.length > 1 ? t('download_as_zip') : t('download')} — {t('loading')}...
+            </div>
+            {selectedItems.length > 1 && (
+              <div className="text-xs text-muted-foreground">
+                {t('these_elements', { total: selectedItems.length })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
