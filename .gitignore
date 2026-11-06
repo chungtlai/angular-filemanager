@@ -2,3 +2,5 @@
 nbproject/
 node_modules/
 target/
+bridges/java/target/
+dist/

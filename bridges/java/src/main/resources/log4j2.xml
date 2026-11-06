@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="angular-filemanager" monitorInterval="30">
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.monosand.drinkout.web.servlet" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="console" />
+        </Root>
+    </Loggers>
+</Configuration>
+
