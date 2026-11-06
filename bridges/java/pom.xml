@@ -19,6 +19,7 @@
         <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
         <json-smart.version>2.5.1</json-smart.version>
         <commons-io.version>2.16.1</commons-io.version>
+        <minio.version>8.5.12</minio.version>
         <slf4j.version>2.0.13</slf4j.version>
         <log4j2.version>2.23.1</log4j2.version>
     </properties>
@@ -44,6 +45,13 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
+        </dependency>
+
+        <!-- MinIO S3 Object Storage SDK -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
         </dependency>
 
         <!-- Logging: SLF4J 2 + Log4j 2 -->

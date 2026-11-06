@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
+  Cloud,
   FolderPlus,
   Globe,
+  HardDrive,
   LayoutGrid,
   List,
   MoreVertical,
@@ -12,7 +14,7 @@ import {
   UploadCloud,
   X,
 } from 'lucide-react';
-import { FileManagerConfig } from '@/types/filemanager';
+import type { FileManagerConfig, StorageBackend } from '@/types/filemanager';
 import { AVAILABLE_LANGUAGES } from '@/i18n/useTranslation';
 import { strLimit } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -29,6 +31,8 @@ interface NavbarProps {
   currentPath: string[];
   query: string;
   onQueryChange: (q: string) => void;
+  storageBackend: StorageBackend;
+  onStorageBackendChange: (backend: StorageBackend) => void;
   viewMode: 'icons' | 'table';
   onViewModeChange: (mode: 'icons' | 'table') => void;
   language: string;
@@ -46,6 +50,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentPath,
   query,
   onQueryChange,
+  storageBackend,
+  onStorageBackendChange,
   viewMode,
   onViewModeChange,
   language,
@@ -119,8 +125,41 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
         </div>
 
-        {/* Right: Search, View Switcher, Language, More Menu */}
+        {/* Right: Storage Backend Switcher, Search, View Switcher, Language, More Menu */}
         <div className="flex items-center gap-1.5">
+          <div
+            className="flex items-center rounded-md bg-black/20 p-0.5 text-xs"
+            role="group"
+            aria-label="Storage backend"
+          >
+            <button
+              type="button"
+              onClick={() => onStorageBackendChange('local')}
+              className={`flex items-center gap-1 rounded px-2 py-1 font-medium transition-colors ${
+                storageBackend === 'local'
+                  ? 'bg-white text-primary shadow-sm'
+                  : 'text-primary-foreground/85 hover:text-primary-foreground hover:bg-white/10'
+              }`}
+              title="Local File System"
+            >
+              <HardDrive className="h-3.5 w-3.5" />
+              <span className="hidden md:inline">Local FS</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onStorageBackendChange('minio')}
+              className={`flex items-center gap-1 rounded px-2 py-1 font-medium transition-colors ${
+                storageBackend === 'minio'
+                  ? 'bg-white text-primary shadow-sm'
+                  : 'text-primary-foreground/85 hover:text-primary-foreground hover:bg-white/10'
+              }`}
+              title="MinIO Object Storage"
+            >
+              <Cloud className="h-3.5 w-3.5" />
+              <span className="hidden md:inline">MinIO</span>
+            </button>
+          </div>
+
           {config.searchForm && (
             <div className="relative flex items-center">
               {searchOpen || query ? (

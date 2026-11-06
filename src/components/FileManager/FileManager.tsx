@@ -5,6 +5,7 @@ import {
   FileItem,
   FileManagerConfig,
   ModalType,
+  StorageBackend,
   TreeNode,
 } from '@/types/filemanager';
 import { defaultConfig } from '@/config/defaultConfig';
@@ -93,17 +94,42 @@ function updateTreeHistory(
 }
 
 export const FileManager: React.FC<FileManagerProps> = ({ config: userConfig }) => {
-  const config: FileManagerConfig = useMemo(
-    () => ({
+  const [storageBackend, setStorageBackend] = useState<StorageBackend>(() => {
+    const saved = localStorage.getItem('storageBackend');
+    return saved === 'minio' ? 'minio' : 'local';
+  });
+
+  const config: FileManagerConfig = useMemo(() => {
+    const merged: FileManagerConfig = {
       ...defaultConfig,
       ...userConfig,
       allowedActions: {
         ...defaultConfig.allowedActions,
         ...(userConfig?.allowedActions || {}),
       },
-    }),
-    [userConfig]
-  );
+    };
+    if (storageBackend === 'minio') {
+      const minioEndpoint = merged.minioUrl || 'bridges/minio/handler';
+      return {
+        ...merged,
+        listUrl: minioEndpoint,
+        uploadUrl: minioEndpoint,
+        renameUrl: minioEndpoint,
+        copyUrl: minioEndpoint,
+        moveUrl: minioEndpoint,
+        removeUrl: minioEndpoint,
+        editUrl: minioEndpoint,
+        getContentUrl: minioEndpoint,
+        createFolderUrl: minioEndpoint,
+        downloadFileUrl: minioEndpoint,
+        downloadMultipleUrl: minioEndpoint,
+        compressUrl: minioEndpoint,
+        extractUrl: minioEndpoint,
+        permissionsUrl: minioEndpoint,
+      };
+    }
+    return merged;
+  }, [userConfig, storageBackend]);
 
   const basePath = useMemo(() => getBasePathArray(config.basePath), [config.basePath]);
 
@@ -161,6 +187,15 @@ export const FileManager: React.FC<FileManagerProps> = ({ config: userConfig }) 
     setViewMode(mode);
   };
 
+  const handleStorageBackendChange = (nextBackend: StorageBackend) => {
+    if (nextBackend === storageBackend) return;
+    localStorage.setItem('storageBackend', nextBackend);
+    setHistory([]);
+    setSelectedItems([]);
+    setCurrentPath([...basePath]);
+    setStorageBackend(nextBackend);
+  };
+
   const refresh = useCallback(
     async (pathToLoad: string[] = currentPath) => {
       const effectivePath = pathToLoad.length ? pathToLoad : basePath;
@@ -192,7 +227,7 @@ export const FileManager: React.FC<FileManagerProps> = ({ config: userConfig }) 
 
   useEffect(() => {
     refresh(currentPath);
-  }, [currentPath]);
+  }, [currentPath, storageBackend]);
 
   // Filtered and sorted items
   const displayedItems = useMemo(() => {
@@ -659,6 +694,8 @@ export const FileManager: React.FC<FileManagerProps> = ({ config: userConfig }) 
         currentPath={currentPath}
         query={query}
         onQueryChange={setQuery}
+        storageBackend={storageBackend}
+        onStorageBackendChange={handleStorageBackendChange}
         viewMode={viewMode}
         onViewModeChange={handleViewModeChange}
         language={language}

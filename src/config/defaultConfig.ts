@@ -1,11 +1,13 @@
 import { FileManagerConfig } from '@/types/filemanager';
 
 const HANDLER_URL = 'bridges/php/handler.php';
+const MINIO_HANDLER_URL = 'bridges/minio/handler';
 
 export const defaultConfig: FileManagerConfig = {
   appName: 'angular-filemanager v2.0',
   defaultLang: 'en',
   multiLang: true,
+  minioUrl: MINIO_HANDLER_URL,
 
   listUrl: HANDLER_URL,
   uploadUrl: HANDLER_URL,

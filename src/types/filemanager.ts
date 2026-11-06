@@ -64,10 +64,13 @@ export interface AllowedActions {
   pickFolders: boolean;
 }
 
+export type StorageBackend = 'local' | 'minio';
+
 export interface FileManagerConfig {
   appName: string;
   defaultLang: string;
   multiLang: boolean;
+  minioUrl?: string;
   listUrl: string;
   uploadUrl: string;
   renameUrl: string;

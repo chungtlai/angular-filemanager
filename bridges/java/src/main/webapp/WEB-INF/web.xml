@@ -7,6 +7,7 @@
 
     <display-name>angular-filemanager</display-name>
 
+    <!-- 1. Local File System Servlet -->
     <servlet>
         <servlet-name>AngularFileManagerServlet</servlet-name>
         <servlet-class>com.monosand.drinkout.web.servlet.AngularFileManagerServlet</servlet-class>
@@ -30,8 +31,47 @@
         <url-pattern>/bridges/php/handler.php</url-pattern>
     </servlet-mapping>
 
+    <!-- 2. MinIO Object Storage Servlet -->
+    <servlet>
+        <servlet-name>MinioFileManagerServlet</servlet-name>
+        <servlet-class>com.monosand.drinkout.web.servlet.MinioFileManagerServlet</servlet-class>
+        <init-param>
+            <param-name>minio.endpoint</param-name>
+            <param-value>http://localhost:9000</param-value>
+        </init-param>
+        <init-param>
+            <param-name>minio.accessKey</param-name>
+            <param-value>minioadmin</param-value>
+        </init-param>
+        <init-param>
+            <param-name>minio.secretKey</param-name>
+            <param-value>minioadmin</param-value>
+        </init-param>
+        <init-param>
+            <param-name>minio.bucket</param-name>
+            <param-value>filemanager</param-value>
+        </init-param>
+        <init-param>
+            <param-name>minio.base.prefix</param-name>
+            <param-value></param-value>
+        </init-param>
+        <init-param>
+            <param-name>date.format</param-name>
+            <param-value>yyyy-MM-dd HH:mm:ss</param-value>
+        </init-param>
+        <init-param>
+            <param-name>enabled.action</param-name>
+            <param-value>rename,move,remove,edit,createFolder,changePermissions,compress,extract,copy,upload</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MinioFileManagerServlet</servlet-name>
+        <url-pattern>/bridges/minio/handler</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 </web-app>
-
